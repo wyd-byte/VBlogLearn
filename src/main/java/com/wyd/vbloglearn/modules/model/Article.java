@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +19,8 @@ import java.util.Date;
  * @author wyd
  * @since 2022-08-31 22:09:07
  */
-@Getter
-@Setter
-@ApiModel(value = "Article对象", description = "")
+@Data
+@ApiModel(value = "Article对象", description = "博客文章对象")
 public class Article implements Serializable {
 
     private static final long serialVersionUID = 1L;
