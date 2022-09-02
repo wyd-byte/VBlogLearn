@@ -6,6 +6,7 @@ import com.wyd.vbloglearn.modules.model.Article;
 import com.wyd.vbloglearn.modules.service.impl.ArticleServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/article")
 @Api(tags = "ArticleController" , description = "博客文章管理")
+@Tag(name = "ArticleController", description = "博客文章管理")
 public class ArticleController {
 
     @Autowired
