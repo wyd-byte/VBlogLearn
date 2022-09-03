@@ -3,6 +3,8 @@ package com.wyd.vbloglearn.modules.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wyd.vbloglearn.modules.model.Roles;
 
+import java.util.List;
+
 /**
  * <p>
  * Mapper 接口
@@ -13,4 +15,5 @@ import com.wyd.vbloglearn.modules.model.Roles;
  */
 public interface RolesMapper extends BaseMapper<Roles> {
 
+    List<Roles> getRolesByUserId(Integer userId);
 }

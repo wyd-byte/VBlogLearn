@@ -23,3 +23,8 @@ jwt:
   secret: vblog-secret #JWT加解密时使用的秘钥
   expiration: 60480 #JWT的超期限时间（60*60*24*7）
   tokenHead: 'Bearer ' #JWT负载中拿到开头
+
+secure:
+  ignored:
+    urls:
+      - /swagger-ui/

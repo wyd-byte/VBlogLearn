@@ -8,4 +8,9 @@
         <result column="name" property="name"/>
     </resultMap>
 
+    <select id="getRolesByUserId" resultMap="BaseResultMap">
+        SELECT r.*
+        FROM roles r ,roles_user ru
+        WHERE ru.`uid` = #{userId} and r.`id` = ru.`rid`
+    </select>
 </mapper>

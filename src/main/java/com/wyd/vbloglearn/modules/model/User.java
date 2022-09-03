@@ -3,6 +3,7 @@ package com.wyd.vbloglearn.modules.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,7 @@ import java.util.Date;
  * @author wyd
  * @since 2022-08-31 22:09:07
  */
-@Getter
-@Setter
+@Data
 @ApiModel(value = "User对象", description = "")
 public class User implements Serializable {
 
