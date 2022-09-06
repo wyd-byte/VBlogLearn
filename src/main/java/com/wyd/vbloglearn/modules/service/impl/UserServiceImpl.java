@@ -1,6 +1,7 @@
 package com.wyd.vbloglearn.modules.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wyd.vbloglearn.domain.MyUserDetails;
 import com.wyd.vbloglearn.modules.mapper.RolesMapper;
@@ -8,9 +9,13 @@ import com.wyd.vbloglearn.modules.mapper.UserMapper;
 import com.wyd.vbloglearn.modules.model.Roles;
 import com.wyd.vbloglearn.modules.model.User;
 import com.wyd.vbloglearn.modules.service.UserService;
+import com.wyd.vbloglearn.security.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +33,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private RolesMapper rolesMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public User getUserByUsername(String username) {
@@ -52,6 +61,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return new MyUserDetails(user, rolesList);
         }
         throw new UsernameNotFoundException("用户名或密码错误");
+    }
+
+    @Override
+    public String login(String username, String password) {
+        UserDetails userDetails = loadUserByUsername(username);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            System.out.println("密码不正确");
+        }
+        if (!userDetails.isEnabled()) {
+            System.out.println("账户已禁用");
+        }
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenUtil.generateUserToken(userDetails);
+        return token;
     }
 
     private List<Roles> getRolesListByUserId(Integer userId) {

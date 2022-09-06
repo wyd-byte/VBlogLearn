@@ -10,7 +10,7 @@ spring:
       matching-strategy: ant_path_matcher # 解决swagger报错Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
 
 server:
-  port: 8089
+  port: 8090
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
@@ -19,7 +19,7 @@ mybatis-plus:
     map-underscore-to-camel-case: false
 
 jwt:
-  tokenHeader: Authrization #JWT存储的请求头
+  tokenHeader: Authorization #JWT存储的请求头
   secret: vblog-secret #JWT加解密时使用的秘钥
   expiration: 60480 #JWT的超期限时间（60*60*24*7）
   tokenHead: 'Bearer ' #JWT负载中拿到开头
@@ -28,3 +28,8 @@ secure:
   ignored:
     urls:
       - /swagger-ui/
+      - /swagger-resources/**
+      - /**/v2/api-docs
+      - /**/*.css
+      - /**/*.js
+      - /user/login
