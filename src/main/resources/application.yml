@@ -8,22 +8,37 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher # 解决swagger报错Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
+  redis:
+    host: 192.168.198.129 # Redis服务器地址
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: 123456 # Redis服务器连接密码（默认为空）
+    jedis:
+      pool:
+        max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 8 # 连接池中的最大空闲连接
+        min-idle: 0 # 连接池中的最小空闲连接
+    timeout: 3000ms # 连接超时时间（毫秒）
 
 server:
   port: 8090
 
+#Mybatis配置信息
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql日志在控制台
     map-underscore-to-camel-case: false
 
+#自定义JWT信息
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
   secret: vblog-secret #JWT加解密时使用的秘钥
-  expiration: 60480 #JWT的超期限时间（60*60*24*7）
+  expiration: 604800 #JWT的超期限时间（60*60*24*7=604800(s)）
   tokenHead: 'Bearer ' #JWT负载中拿到开头
 
+# 需要security忽略的资源路径
 secure:
   ignored:
     urls:
@@ -33,3 +48,12 @@ secure:
       - /**/*.css
       - /**/*.js
       - /user/login
+
+# 自定义redis key
+redis:
+  database: vbloglearn
+  key:
+    user: 'blog:user'
+    resourceList: 'blog:resourceList'
+  expire:
+    common: 86400 #24小时

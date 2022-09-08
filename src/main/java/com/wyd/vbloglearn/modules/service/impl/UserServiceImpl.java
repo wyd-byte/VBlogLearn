@@ -1,15 +1,16 @@
 package com.wyd.vbloglearn.modules.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wyd.vbloglearn.domain.MyUserDetails;
 import com.wyd.vbloglearn.modules.mapper.RolesMapper;
 import com.wyd.vbloglearn.modules.mapper.UserMapper;
 import com.wyd.vbloglearn.modules.model.Roles;
 import com.wyd.vbloglearn.modules.model.User;
+import com.wyd.vbloglearn.modules.service.UserCacheService;
 import com.wyd.vbloglearn.modules.service.UserService;
 import com.wyd.vbloglearn.security.util.JwtTokenUtil;
+import com.wyd.vbloglearn.security.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,17 +41,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User getUserByUsername(String username) {
+        //先访问缓存
+        User user = getCacheService().getUser(username);
+        if (user != null) {
+            return user;
+        }
         // 构建mp查询构造器
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(User::getUsername, username);
         List<User> userList = list(wrapper);
         if (userList != null && userList.size() > 0) {
-            User user = userList.get(0);
+            user = userList.get(0);
+            getCacheService().setUser(user);
             return user;
         }
         return null;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -83,5 +89,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userRoles;
     }
 
+    @Override
+    public Boolean updateUserEmail(User user) {
+        boolean success = updateById(user);
+        return success;
+    }
 
+    @Override
+    public UserCacheService getCacheService() {
+        return SpringUtil.getBean(UserCacheService.class);
+    }
 }
